@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Set Poi">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="poi"
+            android:persistent="true"
+            android:summaryOff="Not Poi"
+            android:summaryOn="Poi"
+            android:title="Poi" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

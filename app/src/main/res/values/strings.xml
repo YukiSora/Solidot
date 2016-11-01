@@ -1,0 +1,12 @@
+<resources>
+
+    <string name="app_name">Solidot</string>
+    <string name="index">Index</string>
+    <string name="popular">Popular</string>
+    <string name="setting">Setting</string>
+    <string name="about">About</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+</resources>
