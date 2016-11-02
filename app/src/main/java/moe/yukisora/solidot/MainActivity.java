@@ -56,12 +56,12 @@ public class MainActivity extends AppCompatActivity {
                 int id = item.getItemId();
 
                 if (id == R.id.navigationIndex) {
-                    fragmentManager.beginTransaction().replace(R.id.fragment, ArticleFragment.newInstance(ArticleFragment.NEW)).commit();
+                    fragmentManager.beginTransaction().replace(R.id.fragment, ArticleFragment.newInstance()).commit();
                     toolbar.setTitle(getString(R.string.app_name));
                     floatingActionButton.show();
                 }
                 else if (id == R.id.navigationPopular) {
-                    fragmentManager.beginTransaction().replace(R.id.fragment, ArticleFragment.newInstance(ArticleFragment.POPULAR)).commit();
+                    fragmentManager.beginTransaction().replace(R.id.fragment, ArticleFragment.newInstance()).commit();
                     toolbar.setTitle(getString(R.string.popular));
                     floatingActionButton.show();
                 }
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Default Fragment
-        fragmentManager.beginTransaction().replace(R.id.fragment, ArticleFragment.newInstance(ArticleFragment.NEW)).commit();
+        fragmentManager.beginTransaction().replace(R.id.fragment, ArticleFragment.newInstance()).commit();
     }
 
     @Override

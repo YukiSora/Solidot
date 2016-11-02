@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 public class NewsManager {
     private static NewsManager newsManager;
     private Handler handler;
+    private boolean isDownloading;
 
     private NewsManager() {
         handler = new Handler();
@@ -28,7 +29,12 @@ public class NewsManager {
     }
 
     public void getNewsByDate(Fragment fragment, String date) {
-        new DownloadNewsByDateTask(fragment, date).start();
+        if (!isDownloading)
+            new DownloadNewsByDateTask(fragment, date).start();
+    }
+
+    public void setDownloading(boolean downloading) {
+        isDownloading = downloading;
     }
 
     private class DownloadNewsByDateTask extends Thread {
@@ -75,7 +81,15 @@ public class NewsManager {
 
         @Override
         public void run() {
+            isDownloading = true;
+
             getNews();
+            if (fragment.getNewsDatas().size() == 0) {
+                date = fragment.getDate();
+                getNews();
+            }
+
+            isDownloading = false;
         }
     }
 }

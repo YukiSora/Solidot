@@ -7,23 +7,23 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 public class ArticleFragment extends Fragment {
-    public static final int NEW = 0;
-    public static final int POPULAR = 1;
-    private int mode;
     private ArrayList<Integer> newsDatas;
+    private Calendar calendar;
     private RecyclerViewAdapter adapter;
 
-    public static ArticleFragment newInstance(int mode) {
+    public static ArticleFragment newInstance() {
         Bundle args = new Bundle();
         ArticleFragment fragment = new ArticleFragment();
-        args.putInt("mode", mode);
         fragment.setArguments(args);
 
         return fragment;
@@ -32,7 +32,6 @@ public class ArticleFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mode = getArguments().getInt("mode");
     }
 
     @Override
@@ -41,13 +40,14 @@ public class ArticleFragment extends Fragment {
 
         initFragment();
         initRecyclerView(view);
-        NewsManager.getInstance().getNewsByDate(this, "20161031");
+        NewsManager.getInstance().getNewsByDate(this, getDate());
 
         return view;
     }
 
     private void initFragment() {
         newsDatas = new ArrayList<>();
+        calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+08:00"));
     }
 
     private void initRecyclerView(View view) {
@@ -68,6 +68,29 @@ public class ArticleFragment extends Fragment {
 
         //Animator
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        //OnScrollListener
+        recyclerView.addOnScrollListener(new RecyclerViewOnScrollListener() {
+            @Override
+            public void onBottom() {
+                NewsManager.getInstance().getNewsByDate(ArticleFragment.this, getDate());
+            }
+
+            @Override
+            public void onTop() {
+                Log.i("poi", "top");
+            }
+        });
+    }
+
+    public String getDate() {
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DATE);
+        String date = String.format("%d%02d%02d", year, month, day);
+        calendar.add(Calendar.DATE, -1);
+
+        return date;
     }
 
     public ArrayList<Integer> getNewsDatas() {
