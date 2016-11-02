@@ -65,7 +65,7 @@ public class NewsCache {
             //Content Block
             Element content = main.select("div.p_mainnew").first();
             //article
-            newsData.article = content.text();
+            newsData.article = content.html();
 
             //---Right Block---
             Element right = document.select("div.block_r").first();

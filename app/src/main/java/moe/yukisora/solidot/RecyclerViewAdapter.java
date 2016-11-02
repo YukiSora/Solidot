@@ -1,10 +1,13 @@
 package moe.yukisora.solidot;
 
 import android.app.Fragment;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
@@ -25,6 +28,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         holder.title.setText(newsData.title);
         holder.reference.setText(newsData.reference);
+        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent("moe.yukisora.yandere.NewsActivity");
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("newsData", newsData);
+                intent.putExtras(bundle);
+                fragment.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -33,12 +46,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        public RelativeLayout relativeLayout;
         public TextView title;
         public TextView reference;
 
         public ViewHolder(View view) {
             super(view);
 
+            relativeLayout = (RelativeLayout)view.findViewById(R.id.relativeLayout);
             title = (TextView)view.findViewById(R.id.title);
             reference = (TextView)view.findViewById(R.id.reference);
         }
