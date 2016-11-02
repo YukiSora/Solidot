@@ -9,4 +9,14 @@ public class NewsData implements Serializable {
     public String reference;
     public String article;
     public int numberOfView;
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof NewsData && sid == ((NewsData)obj).sid;
+    }
+
+    @Override
+    public int hashCode() {
+        return sid;
+    }
 }

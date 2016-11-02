@@ -33,25 +33,41 @@ public class ArticleFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mode = getArguments().getInt("mode");
-
-        newsDatas = new ArrayList<>();
-        NewsManager.getInstance().getNewsByDate(this, "20161031");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_article, container, false);
 
-        adapter = new RecyclerViewAdapter(this);
+        initFragment();
+        initRecyclerView(view);
+        NewsManager.getInstance().getNewsByDate(this, "20161031");
+
+        return view;
+    }
+
+    private void initFragment() {
+        newsDatas = new ArrayList<>();
+    }
+
+    private void initRecyclerView(View view) {
+        //RecyclerView
         RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
+
+        //Layout
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        //Adapter
+        adapter = new RecyclerViewAdapter(this);
         recyclerView.setAdapter(adapter);
+
+        //Divider
         DividerItemDecoration divider = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
         divider.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.recycler_view_divider));
         recyclerView.addItemDecoration(divider);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        return view;
+        //Animator
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     public ArrayList<Integer> getNewsDatas() {

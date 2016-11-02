@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -18,7 +17,7 @@ public class NewsActivity extends AppCompatActivity {
         NewsData newsData = (NewsData)getIntent().getSerializableExtra("newsData");
 
         //Tool Bar
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbarActivity);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbarNewsActivity);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -26,15 +25,12 @@ public class NewsActivity extends AppCompatActivity {
         }
 
         //content
-        ((TextView)findViewById(R.id.titleActivity)).setText(newsData.title);
-        ((TextView)findViewById(R.id.referenceActivity)).setText(newsData.reference);
-        if (Build.VERSION.SDK_INT >= 24) {
-            ((TextView)findViewById(R.id.articleActivity)).setText(Html.fromHtml(newsData.article, Html.FROM_HTML_MODE_COMPACT));
-        }
-        else {
-            ((TextView)findViewById(R.id.articleActivity)).setText(Html.fromHtml(newsData.article));
-        }
-        Log.i("poi", newsData.article);
+        ((TextView)findViewById(R.id.titleNewsActivity)).setText(newsData.title);
+        ((TextView)findViewById(R.id.referenceNewsActivity)).setText(newsData.reference);
+        if (Build.VERSION.SDK_INT >= 24)
+            ((TextView)findViewById(R.id.articleNewsActivity)).setText(Html.fromHtml(newsData.article, Html.FROM_HTML_MODE_COMPACT));
+        else
+            ((TextView)findViewById(R.id.articleNewsActivity)).setText(Html.fromHtml(newsData.article));
     }
 
     @Override

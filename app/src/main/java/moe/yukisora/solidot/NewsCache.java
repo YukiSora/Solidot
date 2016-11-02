@@ -50,7 +50,7 @@ public class NewsCache {
             Element main = document.select("div.block_m").first();
 
             //Title Block
-            //by the way, tittle is website typo
+            //by the way, tittle is typo by website
             Element title = main.select("div.ct_tittle").first();
             //title
             newsData.title = title.select("h2").text();

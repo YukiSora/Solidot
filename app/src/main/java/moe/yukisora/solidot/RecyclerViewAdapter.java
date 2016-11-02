@@ -31,7 +31,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent("moe.yukisora.yandere.NewsActivity");
+                Intent intent = new Intent("moe.yukisora.solidot.NewsActivity");
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("newsData", newsData);
                 intent.putExtras(bundle);
@@ -53,9 +53,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public ViewHolder(View view) {
             super(view);
 
-            relativeLayout = (RelativeLayout)view.findViewById(R.id.relativeLayout);
-            title = (TextView)view.findViewById(R.id.title);
-            reference = (TextView)view.findViewById(R.id.reference);
+            relativeLayout = (RelativeLayout)view.findViewById(R.id.relativeLayoutItemView);
+            title = (TextView)view.findViewById(R.id.titleItemView);
+            reference = (TextView)view.findViewById(R.id.referenceItemView);
         }
     }
 }

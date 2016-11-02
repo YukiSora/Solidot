@@ -33,7 +33,7 @@
 
             <intent-filter>
 
-                <action android:name="moe.yukisora.yandere.NewsActivity" />
+                <action android:name="moe.yukisora.solidot.NewsActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
 
