@@ -23,7 +23,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         final NewsData newsData = fragment.getNewsDatas().get(position);
 
-        holder.textView.setText(newsData.title);
+        holder.title.setText(newsData.title);
+        holder.reference.setText(newsData.reference);
     }
 
     @Override
@@ -32,12 +33,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textView;
+        public TextView title;
+        public TextView reference;
 
         public ViewHolder(View view) {
             super(view);
 
-            textView = (TextView)view.findViewById(R.id.textView);
+            title = (TextView)view.findViewById(R.id.title);
+            reference = (TextView)view.findViewById(R.id.reference);
         }
     }
 }
