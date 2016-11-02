@@ -2,6 +2,7 @@ package moe.yukisora.solidot;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -52,7 +53,7 @@ public class ArticleFragment extends Fragment {
 
     private void initRecyclerView(View view) {
         //RecyclerView
-        RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
+        final RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
 
         //Layout
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -79,6 +80,15 @@ public class ArticleFragment extends Fragment {
             @Override
             public void onTop() {
                 Log.i("poi", "top");
+            }
+        });
+
+        //Floating Action Button
+        FloatingActionButton floatingActionButton = (FloatingActionButton)getActivity().findViewById(R.id.floatingActionButton);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recyclerView.smoothScrollToPosition(0);
             }
         });
     }

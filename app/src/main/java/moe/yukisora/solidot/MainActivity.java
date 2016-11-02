@@ -11,9 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle toggle;
@@ -36,12 +34,6 @@ public class MainActivity extends AppCompatActivity {
 
         //Floating Action Button
         floatingActionButton = (FloatingActionButton)findViewById(R.id.floatingActionButton);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i("poi", "Button is clicked");
-            }
-        });
 
         //Drawer Layout
         drawer = (DrawerLayout)findViewById(R.id.drawerLayout);
