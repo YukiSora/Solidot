@@ -7,4 +7,5 @@ public class NewsData {
     public String date;
     public String reference;
     public String article;
+    public int numberOfView;
 }

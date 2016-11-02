@@ -3,6 +3,7 @@ package moe.yukisora.solidot;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +17,7 @@ public class ArticleFragment extends Fragment {
     public static final int NEW = 0;
     public static final int POPULAR = 1;
     private int mode;
-    private ArrayList<NewsData> newsDatas;
+    private ArrayList<Integer> newsDatas;
     private RecyclerViewAdapter adapter;
 
     public static ArticleFragment newInstance(int mode) {
@@ -48,11 +49,12 @@ public class ArticleFragment extends Fragment {
         DividerItemDecoration divider = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
         divider.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.recycler_view_divider));
         recyclerView.addItemDecoration(divider);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         return view;
     }
 
-    public ArrayList<NewsData> getNewsDatas() {
+    public ArrayList<Integer> getNewsDatas() {
         return newsDatas;
     }
 

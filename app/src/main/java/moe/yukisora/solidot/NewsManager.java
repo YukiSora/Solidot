@@ -31,34 +31,6 @@ public class NewsManager {
         new DownloadNewsByDateTask(fragment, date).start();
     }
 
-    private NewsData parseNews(Element block) {
-        NewsData newData = new NewsData();
-
-        //Title Block
-        Element title = block.select("div.bg_htit h2").first().getElementsByTag("a").last();
-        //sid
-        Matcher m = Pattern.compile("\\d+").matcher(title.attr("href"));
-        if (m.find())
-            newData.sid = Integer.parseInt(m.group());
-        //title
-        newData.title = title.text();
-
-        //Attribute Block
-        Element attribute = block.select("div.talk_time").first();
-        //category
-        newData.category = attribute.select("img").attr("alt");
-        //date
-        newData.date = attribute.ownText();
-        //reference
-        newData.reference = attribute.select("b").text();
-
-        //Content Block
-        Element content = block.select("div.p_content").first();
-        newData.article = content.select("div.p_mainnew").text();
-
-        return newData;
-    }
-
     private class DownloadNewsByDateTask extends Thread {
         private ArticleFragment fragment;
         private String date;
@@ -78,11 +50,16 @@ public class NewsManager {
                 //parse
                 Document document = connection.get();
                 for (Element block : document.select("div.block_m")) {
-                    //parse
-                    NewsData newData = parseNews(block);
+                    //sid
+                    int sid = 0;
+                    String href = block.select("div.bg_htit h2").first().getElementsByTag("a").last().attr("href");
+                    Matcher m = Pattern.compile("\\d+").matcher(href);
+                    if (m.find())
+                        sid = Integer.parseInt(m.group());
 
                     //insert
-                    fragment.getNewsDatas().add(newData);
+                    NewsCache.getInstance().getNews(sid);
+                    fragment.getNewsDatas().add(sid);
 
                     //render
                     handler.post(new Runnable() {
