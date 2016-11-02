@@ -58,7 +58,25 @@ public class NewsCache {
             //Attribute Block
             Element attribute = main.select("div.talk_time").first();
             //date
-            newsData.date = attribute.ownText();
+            StringBuilder date = new StringBuilder();
+            Matcher m1 = Pattern.compile("\\d+").matcher(attribute.ownText());
+            m1.find();
+            if (m1.find())
+                date.append(m1.group());
+            date.append("/");
+            if (m1.find())
+                date.append(m1.group());
+            date.append("/");
+            if (m1.find())
+                date.append(m1.group());
+            date.append(" ");
+            if (m1.find())
+                date.append(m1.group());
+            date.append(":");
+            if (m1.find())
+                date.append(m1.group());
+            newsData.date = date.toString();
+
             //reference
             newsData.reference = attribute.select("b").first().text();
 
@@ -73,10 +91,9 @@ public class NewsCache {
             Element view = right.select("div.content").first();
             //number of view
             int numberOfView = 0;
-            String numberOfViewText = view.select("b").text();
-            Matcher m = Pattern.compile("\\d+").matcher(numberOfViewText);
-            if (m.find())
-                numberOfView = Integer.parseInt(m.group());
+            Matcher m2 = Pattern.compile("\\d+").matcher(view.select("b").text());
+            if (m2.find())
+                numberOfView = Integer.parseInt(m2.group());
             newsData.numberOfView = numberOfView;
 
         } catch (IOException ignore) {

@@ -21,11 +21,11 @@
 
     <style name="AppTheme.ArticleTitle">
 
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">16sp</item>
 
     </style>
 
-    <style name="AppTheme.ArticleReference">
+    <style name="AppTheme.ArticleDetail">
 
         <item name="android:textColor">#A9A9A9</item>
         <item name="android:textSize">10sp</item>

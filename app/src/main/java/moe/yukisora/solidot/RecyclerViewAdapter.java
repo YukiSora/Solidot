@@ -27,6 +27,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         final NewsData newsData = NewsCache.getInstance().getNews(fragment.getNewsDatas().get(position));
 
         holder.title.setText(newsData.title);
+        holder.date.setText(newsData.date);
         holder.reference.setText(newsData.reference);
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +49,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout relativeLayout;
         public TextView title;
+        public TextView date;
         public TextView reference;
 
         public ViewHolder(View view) {
@@ -55,6 +57,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             relativeLayout = (RelativeLayout)view.findViewById(R.id.relativeLayoutItemView);
             title = (TextView)view.findViewById(R.id.titleItemView);
+            date = (TextView)view.findViewById(R.id.dateItemView);
             reference = (TextView)view.findViewById(R.id.referenceItemView);
         }
     }
