@@ -1,7 +1,7 @@
 package moe.yukisora.solidot;
 
-import android.os.AsyncTask;
-import android.util.Log;
+import android.app.Fragment;
+import android.os.Handler;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -15,8 +15,10 @@ import java.util.regex.Pattern;
 
 public class NewsManager {
     private static NewsManager newsManager;
+    private Handler handler;
 
     private NewsManager() {
+        handler = new Handler();
     }
 
     public static NewsManager getInstance() {
@@ -26,17 +28,25 @@ public class NewsManager {
         return newsManager;
     }
 
-    public void getNews(final String date) {
-        new DownloadNewsLinksTask().execute(date);
+    public void getNews(Fragment fragment, String date) {
+        new DownloadNewsLinksTask(fragment, date).start();
     }
 
-    private class DownloadNewsLinksTask extends AsyncTask<String, Void, ArrayList<String>> {
-        protected ArrayList<String> doInBackground(String... date) {
+    private class DownloadNewsLinksTask extends Thread {
+        private ArticleFragment fragment;
+        private String date;
+
+        DownloadNewsLinksTask(Fragment fragment, String date) {
+            this.fragment = (ArticleFragment)fragment;
+            this.date = date;
+        }
+
+        private ArrayList<String> getNewsLinks() {
             ArrayList<String> links = new ArrayList<>();
             Pattern p = Pattern.compile("\\d+");
             try {
                 //connecting
-                Connection connection = Jsoup.connect("http://www.solidot.org/?issue=" + date[0]);
+                Connection connection = Jsoup.connect("http://www.solidot.org/?issue=" + date);
                 connection.header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:49.0) Gecko/20100101 Firefox/49.0");
                 connection.timeout(30 * 1000);
 
@@ -54,9 +64,18 @@ public class NewsManager {
             return links;
         }
 
-        protected void onPostExecute(ArrayList<String> links) {
-            for (String link : links) {
-                Log.i("poi", link);
+        @Override
+        public void run() {
+            for (String link : getNewsLinks()) {
+                NewsData data = new NewsData();
+                data.sid = Integer.parseInt(link);
+                fragment.getNewsDatas().add(data);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        fragment.getAdapter().notifyItemInserted(fragment.getNewsDatas().size() - 1);
+                    }
+                });
             }
         }
     }
