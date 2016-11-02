@@ -9,7 +9,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,22 +27,48 @@ public class NewsManager {
         return newsManager;
     }
 
-    public void getNews(Fragment fragment, String date) {
-        new DownloadNewsLinksTask(fragment, date).start();
+    public void getNewsByDate(Fragment fragment, String date) {
+        new DownloadNewsByDateTask(fragment, date).start();
     }
 
-    private class DownloadNewsLinksTask extends Thread {
+    private NewsData parseNews(Element block) {
+        NewsData newData = new NewsData();
+
+        //Title Block
+        Element title = block.select("div.bg_htit h2").first().getElementsByTag("a").last();
+        //sid
+        Matcher m = Pattern.compile("\\d+").matcher(title.attr("href"));
+        if (m.find())
+            newData.sid = Integer.parseInt(m.group());
+        //title
+        newData.title = title.text();
+
+        //Attribute Block
+        Element attribute = block.select("div.talk_time").first();
+        //category
+        newData.category = attribute.select("img").attr("alt");
+        //date
+        newData.date = attribute.ownText();
+        //reference
+        newData.reference = attribute.select("b").text();
+
+        //Content Block
+        Element content = block.select("div.p_content").first();
+        newData.article = content.select("div.p_mainnew").text();
+
+        return newData;
+    }
+
+    private class DownloadNewsByDateTask extends Thread {
         private ArticleFragment fragment;
         private String date;
 
-        DownloadNewsLinksTask(Fragment fragment, String date) {
+        DownloadNewsByDateTask(Fragment fragment, String date) {
             this.fragment = (ArticleFragment)fragment;
             this.date = date;
         }
 
-        private ArrayList<String> getNewsLinks() {
-            ArrayList<String> links = new ArrayList<>();
-            Pattern p = Pattern.compile("\\d+");
+        private void getNews() {
             try {
                 //connecting
                 Connection connection = Jsoup.connect("http://www.solidot.org/?issue=" + date);
@@ -53,30 +78,27 @@ public class NewsManager {
                 //parse
                 Document document = connection.get();
                 for (Element block : document.select("div.block_m")) {
-                    String href = block.select("div.bg_htit h2").first().getElementsByTag("a").last().attr("href");
-                    Matcher m = p.matcher(href);
-                    if (m.find())
-                        links.add(m.group());
+                    //parse
+                    NewsData newData = parseNews(block);
+
+                    //insert
+                    fragment.getNewsDatas().add(newData);
+
+                    //render
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            fragment.getAdapter().notifyItemInserted(fragment.getNewsDatas().size() - 1);
+                        }
+                    });
                 }
             } catch (IOException ignore) {
             }
-
-            return links;
         }
 
         @Override
         public void run() {
-            for (String link : getNewsLinks()) {
-                NewsData data = new NewsData();
-                data.sid = Integer.parseInt(link);
-                fragment.getNewsDatas().add(data);
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        fragment.getAdapter().notifyItemInserted(fragment.getNewsDatas().size() - 1);
-                    }
-                });
-            }
+            getNews();
         }
     }
 }

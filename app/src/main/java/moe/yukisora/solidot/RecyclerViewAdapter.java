@@ -23,7 +23,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         final NewsData newsData = fragment.getNewsDatas().get(position);
 
-        holder.textView.setText(newsData.sid + "");
+        holder.textView.setText(newsData.title);
     }
 
     @Override

@@ -32,7 +32,7 @@ public class ArticleFragment extends Fragment {
         mode = getArguments().getInt("mode");
 
         newsDatas = new ArrayList<>();
-        NewsManager.getInstance().getNews(this, "20161031");
+        NewsManager.getInstance().getNewsByDate(this, "20161031");
     }
 
     @Override
