@@ -26,6 +26,7 @@ public class NewsActivity extends AppCompatActivity {
 
         //content
         ((TextView)findViewById(R.id.titleNewsActivity)).setText(newsData.title);
+        ((TextView)findViewById(R.id.dateNewsActivity)).setText(newsData.date);
         ((TextView)findViewById(R.id.referenceNewsActivity)).setText(newsData.reference);
         if (Build.VERSION.SDK_INT >= 24)
             ((TextView)findViewById(R.id.articleNewsActivity)).setText(Html.fromHtml(newsData.article, Html.FROM_HTML_MODE_COMPACT));
