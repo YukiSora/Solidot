@@ -14,15 +14,34 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import moe.yukisora.solidot.R;
+import moe.yukisora.solidot.SolidotApplication;
 import moe.yukisora.solidot.adapters.RecyclerViewAdapter;
-import moe.yukisora.solidot.core.NewsManager;
-import moe.yukisora.solidot.interfaces.GetNewsCallback;
+import moe.yukisora.solidot.core.NewsCache;
 import moe.yukisora.solidot.interfaces.RecyclerViewOnScrollListener;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class ArticleFragment extends Fragment {
     private ArrayList<Integer> newsDatas;
@@ -85,7 +104,7 @@ public class ArticleFragment extends Fragment {
         recyclerView.addOnScrollListener(new RecyclerViewOnScrollListener() {
             @Override
             public void onBottom() {
-               getNews();
+                getNews();
             }
 
             @Override
@@ -117,9 +136,53 @@ public class ArticleFragment extends Fragment {
     public void getNews() {
         if (!isDownloading) {
             isDownloading = true;
-            NewsManager.getInstance().getNews(nextDate(), new GetNewsCallback() {
+            Observable.create(new ObservableOnSubscribe<ArrayList<Integer>>() {
                 @Override
-                public void onResponse(final ArrayList<Integer> newsDatas) {
+                public void subscribe(@NonNull final ObservableEmitter<ArrayList<Integer>> e) throws Exception {
+                    Request request = new Request.Builder()
+                            .url("http://www.solidot.org/?issue=" + nextDate())
+                            .build();
+
+                    SolidotApplication.getOkHttpClient().newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            if (response.isSuccessful()) {
+                                //parse
+                                ArrayList<Integer> newsDatas = new ArrayList<>();
+                                Document document = Jsoup.parse(response.body().string());
+                                for (Element block : document.select("div.block_m")) {
+                                    //sid
+                                    int sid = 0;
+                                    String href = block.select("div.bg_htit h2").first().getElementsByTag("a").last().attr("href");
+                                    Matcher m = Pattern.compile("\\d+").matcher(href);
+                                    if (m.find())
+                                        sid = Integer.parseInt(m.group());
+
+                                    //insert
+                                    NewsCache.getInstance().getNews(sid);
+                                    newsDatas.add(sid);
+                                }
+                                e.onNext(newsDatas);
+                            }
+                        }
+                    });
+                }
+            })
+            .observeOn(Schedulers.io())
+            .subscribeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Observer<ArrayList<Integer>>() {
+                @Override
+                public void onSubscribe(@NonNull Disposable d) {
+
+                }
+
+                @Override
+                public void onNext(@NonNull ArrayList<Integer> newsDatas) {
                     final int startPosition = ArticleFragment.this.newsDatas.size();
                     final int itemCount = newsDatas.size();
                     ArticleFragment.this.newsDatas.addAll(newsDatas);
@@ -128,13 +191,18 @@ public class ArticleFragment extends Fragment {
                         @Override
                         public void run() {
                             getAdapter().notifyItemRangeInserted(startPosition, startPosition + itemCount);
+                            isDownloading = false;
                         }
                     });
-                    isDownloading = false;
                 }
 
                 @Override
-                public void onFailure() {
+                public void onError(@NonNull Throwable e) {
+
+                }
+
+                @Override
+                public void onComplete() {
 
                 }
             });
