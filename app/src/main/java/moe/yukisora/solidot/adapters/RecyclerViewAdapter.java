@@ -10,10 +10,9 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import moe.yukisora.solidot.core.NewsCache;
-import moe.yukisora.solidot.modles.NewsData;
 import moe.yukisora.solidot.R;
 import moe.yukisora.solidot.fragments.ArticleFragment;
+import moe.yukisora.solidot.modles.NewsData;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private ArticleFragment fragment;
@@ -29,10 +28,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final NewsData newsData = NewsCache.getInstance().getNews(fragment.getNewsDatas().get(position));
+        final NewsData newsData = fragment.getNewsDatas().get(position);
 
         holder.title.setText(newsData.title);
-        holder.date.setText(newsData.date);
+        holder.date.setText(newsData.datetime);
         holder.reference.setText(newsData.reference);
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override

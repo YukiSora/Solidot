@@ -59,7 +59,7 @@ public class NewsCache {
 
             //Attribute Block
             Element attribute = main.select("div.talk_time").first();
-            //date
+            //datetime
             StringBuilder date = new StringBuilder();
             Matcher m1 = Pattern.compile("\\d+").matcher(attribute.ownText());
             m1.find();
@@ -77,7 +77,7 @@ public class NewsCache {
             date.append(":");
             if (m1.find())
                 date.append(m1.group());
-            newsData.date = date.toString();
+            newsData.datetime = date.toString();
 
             //reference
             newsData.reference = attribute.select("b").first().text();

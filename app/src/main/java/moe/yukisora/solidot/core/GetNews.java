@@ -18,34 +18,19 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import moe.yukisora.solidot.SolidotApplication;
+import moe.yukisora.solidot.modles.NewsData;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class GetNews {
-    public static void getNews(String url, Observer<ArrayList<Integer>> observer) {
+    public static void getNews(String url, Observer<ArrayList<NewsData>> observer) {
         downloadNews(url)
-                .map(new Function<String, ArrayList<Integer>>() {
+                .map(new Function<String, ArrayList<NewsData>>() {
                     @Override
-                    public ArrayList<Integer> apply(@NonNull String html) throws Exception {
-                        ArrayList<Integer> newsDatas = new ArrayList<>();
-
-                        Document document = Jsoup.parse(html);
-                        for (Element block : document.select("div.block_m")) {
-                            //sid
-                            int sid = 0;
-                            String href = block.select("div.bg_htit h2").first().getElementsByTag("a").last().attr("href");
-                            Matcher m = Pattern.compile("\\d+").matcher(href);
-                            if (m.find())
-                                sid = Integer.parseInt(m.group());
-
-                            //insert
-                            NewsCache.getInstance().getNews(sid);
-                            newsDatas.add(sid);
-                        }
-
-                        return newsDatas;
+                    public ArrayList<NewsData> apply(@NonNull String html) throws Exception {
+                        return parseNews(html);
                     }
                 })
                 .observeOn(Schedulers.io())
@@ -71,6 +56,7 @@ public class GetNews {
                     public void onResponse(Call call, Response response) throws IOException {
                         if (response.isSuccessful() && response.body() != null) {
                             emitter.onNext(response.body().string());
+                            emitter.onComplete();
                         } else {
                             emitter.onError(new IOException("Response failed."));
                         }
@@ -78,5 +64,43 @@ public class GetNews {
                 });
             }
         });
+    }
+
+    private static ArrayList<NewsData> parseNews(String html) {
+        ArrayList<NewsData> newsDatas = new ArrayList<>();
+
+        Document document = Jsoup.parse(html);
+        for (Element block : document.select("div.block_m")) {
+            NewsData newsData = new NewsData();
+
+            // title block
+            Element titleBlock = block.select("div.bg_htit").first();
+            Element titleBlockA = titleBlock.getElementsByTag("a").last();
+            // sid
+            Matcher m = Pattern.compile("\\d+").matcher(titleBlockA.attr("href"));
+            if (m.find()) {
+                newsData.sid = Integer.parseInt(m.group());
+            }
+            // title
+            newsData.title = titleBlockA.text();
+
+            // title block
+            Element timeBlock = block.select("div.talk_time").first();
+            // datetime
+            String datetime = timeBlock.ownText();
+            newsData.datetime = datetime.substring(3, datetime.length() - 4);
+            // reference
+            Element timeBlockB = timeBlock.select("b").first();
+            newsData.reference = timeBlockB.text();
+
+            // content block
+            Element contentBlock = block.select("div.p_content").first();
+            // article
+            newsData.article = contentBlock.select("div.p_mainnew").html();
+
+            newsDatas.add(newsData);
+        }
+
+        return newsDatas;
     }
 }

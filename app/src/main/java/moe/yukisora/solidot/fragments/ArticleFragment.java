@@ -27,9 +27,10 @@ import moe.yukisora.solidot.SolidotApplication;
 import moe.yukisora.solidot.adapters.RecyclerViewAdapter;
 import moe.yukisora.solidot.core.GetNews;
 import moe.yukisora.solidot.interfaces.RecyclerViewOnScrollListener;
+import moe.yukisora.solidot.modles.NewsData;
 
 public class ArticleFragment extends Fragment {
-    private ArrayList<Integer> newsDatas;
+    private ArrayList<NewsData> newsDatas;
     private Calendar calendar;
     private Handler handler;
     private RecyclerViewAdapter adapter;
@@ -94,7 +95,6 @@ public class ArticleFragment extends Fragment {
 
             @Override
             public void onTop() {
-                Log.i("poi", "top");
             }
         });
 
@@ -122,44 +122,45 @@ public class ArticleFragment extends Fragment {
         if (!isDownloading) {
             isDownloading = true;
 
-            GetNews.getNews("http://www.solidot.org/?issue=" + nextDate(), new Observer<ArrayList<Integer>>() {
+            GetNews.getNews("http://www.solidot.org/?issue=" + nextDate(), new Observer<ArrayList<NewsData>>() {
                 @Override
                 public void onSubscribe(@NonNull Disposable d) {
                 }
 
                 @Override
-                public void onNext(@NonNull ArrayList<Integer> newsDatas) {
+                public void onNext(@NonNull ArrayList<NewsData> newsDatas) {
                     final int startPosition = ArticleFragment.this.newsDatas.size();
-                    final int itemCount = newsDatas.size();
                     ArticleFragment.this.newsDatas.addAll(newsDatas);
-                    //render
+                    final int EndPosition = ArticleFragment.this.newsDatas.size();
+
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            getAdapter().notifyItemRangeInserted(startPosition, startPosition + itemCount);
-                            isDownloading = false;
+                            adapter.notifyItemRangeInserted(startPosition, EndPosition);
                         }
                     });
                 }
 
                 @Override
                 public void onError(@NonNull Throwable e) {
-                    Toast.makeText(getActivity(), "Fetch news failed.", Toast.LENGTH_SHORT).show();
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getActivity(), "Fetch news failed.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     Log.e(SolidotApplication.TAG, e.toString());
                 }
 
                 @Override
                 public void onComplete() {
+                    isDownloading = false;
                 }
             });
         }
     }
 
-    public ArrayList<Integer> getNewsDatas() {
+    public ArrayList<NewsData> getNewsDatas() {
         return newsDatas;
-    }
-
-    public RecyclerViewAdapter getAdapter() {
-        return adapter;
     }
 }
