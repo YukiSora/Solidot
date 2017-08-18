@@ -19,7 +19,7 @@ public class NewsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_news);
         NewsData newsData = (NewsData)getIntent().getSerializableExtra("newsData");
 
-        //Tool Bar
+        // toolbar
         Toolbar toolbar = findViewById(R.id.toolbarNewsActivity);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -27,7 +27,7 @@ public class NewsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        //content
+        // content
         ((TextView)findViewById(R.id.titleNewsActivity)).setText(newsData.title);
         ((TextView)findViewById(R.id.dateNewsActivity)).setText(newsData.datetime);
         ((TextView)findViewById(R.id.referenceNewsActivity)).setText(newsData.reference);

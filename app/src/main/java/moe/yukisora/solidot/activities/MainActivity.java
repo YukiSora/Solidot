@@ -42,23 +42,23 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         SolidotApplication.setOkHttpClient(okHttpClient);
 
-        //Fragment Manager
+        // fragment manager
         fragmentManager = getFragmentManager();
 
-        //Tool Bar
+        // toolbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //Floating Action Button
+        // floating action button
         floatingActionButton = findViewById(R.id.floatingActionButton);
 
-        //Drawer Layout
+        // drawer layout
         drawer = findViewById(R.id.drawerLayout);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
 
-        //Navigation View
+        // navigation view
         ((NavigationView)findViewById(R.id.navigationView)).setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Default Fragment
+        // default fragment
         fragmentManager.beginTransaction().replace(R.id.fragment, ArticleFragment.newInstance()).commit();
     }
 

@@ -68,25 +68,25 @@ public class ArticleFragment extends Fragment {
     }
 
     private void initRecyclerView(View view) {
-        //RecyclerView
+        // recycler view
         final RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
 
-        //Layout
+        // layout
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        //Adapter
+        // adapter
         adapter = new RecyclerViewAdapter(this);
         recyclerView.setAdapter(adapter);
 
-        //Divider
+        // divider
         DividerItemDecoration divider = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
         divider.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.recycler_view_divider));
         recyclerView.addItemDecoration(divider);
 
-        //Animator
+        // animator
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        //OnScrollListener
+        // scroll listener
         recyclerView.addOnScrollListener(new RecyclerViewOnScrollListener() {
             @Override
             public void onBottom() {
@@ -98,7 +98,7 @@ public class ArticleFragment extends Fragment {
             }
         });
 
-        //Floating Action Button
+        // floating action button
         FloatingActionButton floatingActionButton = getActivity().findViewById(R.id.floatingActionButton);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
