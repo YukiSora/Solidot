@@ -1,7 +1,9 @@
-package moe.yukisora.solidot;
+package moe.yukisora.solidot.interfaces;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.LinearLayoutManager;
+
+import moe.yukisora.solidot.interfaces.OnPositionListener;
 
 public abstract class RecyclerViewOnScrollListener extends RecyclerView.OnScrollListener implements OnPositionListener {
     private int firstPosition;

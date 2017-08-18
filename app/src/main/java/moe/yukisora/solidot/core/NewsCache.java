@@ -1,4 +1,4 @@
-package moe.yukisora.solidot;
+package moe.yukisora.solidot.core;
 
 import android.util.SparseArray;
 
@@ -10,6 +10,8 @@ import org.jsoup.nodes.Element;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import moe.yukisora.solidot.modles.NewsData;
 
 public class NewsCache {
     private static NewsCache newsCache;

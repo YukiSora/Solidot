@@ -1,4 +1,4 @@
-package moe.yukisora.solidot;
+package moe.yukisora.solidot.modles;
 
 import java.io.Serializable;
 

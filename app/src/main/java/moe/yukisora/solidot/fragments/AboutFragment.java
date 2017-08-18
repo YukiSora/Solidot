@@ -1,7 +1,9 @@
-package moe.yukisora.solidot;
+package moe.yukisora.solidot.fragments;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+
+import moe.yukisora.solidot.R;
 
 public class AboutFragment extends PreferenceFragment {
     public static AboutFragment newInstance() {

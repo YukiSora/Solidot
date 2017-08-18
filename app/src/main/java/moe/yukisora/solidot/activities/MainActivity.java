@@ -1,4 +1,4 @@
-package moe.yukisora.solidot;
+package moe.yukisora.solidot.activities;
 
 import android.app.FragmentManager;
 import android.os.Bundle;
@@ -13,6 +13,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import java.util.concurrent.TimeUnit;
+
+import moe.yukisora.solidot.R;
+import moe.yukisora.solidot.SolidotApplication;
+import moe.yukisora.solidot.fragments.AboutFragment;
+import moe.yukisora.solidot.fragments.ArticleFragment;
+import moe.yukisora.solidot.fragments.SettingFragment;
+import okhttp3.OkHttpClient;
+
 public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle toggle;
     private DrawerLayout drawer;
@@ -24,6 +33,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .retryOnConnectionFailure(true)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .build();
+        SolidotApplication.setOkHttpClient(okHttpClient);
 
         //Fragment Manager
         fragmentManager = getFragmentManager();

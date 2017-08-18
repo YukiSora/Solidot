@@ -1,4 +1,4 @@
-package moe.yukisora.solidot;
+package moe.yukisora.solidot.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -16,6 +16,11 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
+
+import moe.yukisora.solidot.core.NewsManager;
+import moe.yukisora.solidot.R;
+import moe.yukisora.solidot.adapters.RecyclerViewAdapter;
+import moe.yukisora.solidot.interfaces.RecyclerViewOnScrollListener;
 
 public class ArticleFragment extends Fragment {
     private ArrayList<Integer> newsDatas;

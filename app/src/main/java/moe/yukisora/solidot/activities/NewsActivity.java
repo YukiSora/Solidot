@@ -1,4 +1,4 @@
-package moe.yukisora.solidot;
+package moe.yukisora.solidot.activities;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -8,6 +8,9 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import moe.yukisora.solidot.modles.NewsData;
+import moe.yukisora.solidot.R;
 
 public class NewsActivity extends AppCompatActivity {
     @Override
