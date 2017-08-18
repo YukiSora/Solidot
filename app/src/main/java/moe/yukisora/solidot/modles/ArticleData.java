@@ -2,7 +2,7 @@ package moe.yukisora.solidot.modles;
 
 import java.io.Serializable;
 
-public class NewsData implements Serializable {
+public class ArticleData implements Serializable {
     public int sid;
     public String title;
     public String datetime;
@@ -12,7 +12,7 @@ public class NewsData implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof NewsData && sid == ((NewsData)obj).sid;
+        return obj instanceof ArticleData && sid == ((ArticleData)obj).sid;
     }
 
     @Override

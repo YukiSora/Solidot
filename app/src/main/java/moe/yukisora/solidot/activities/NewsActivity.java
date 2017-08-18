@@ -6,21 +6,28 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import moe.yukisora.solidot.modles.NewsData;
 import moe.yukisora.solidot.R;
+import moe.yukisora.solidot.modles.ArticleData;
 
 public class NewsActivity extends AppCompatActivity {
+    private ArticleData articleData;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
-        NewsData newsData = (NewsData)getIntent().getSerializableExtra("newsData");
+        articleData = (ArticleData)getIntent().getSerializableExtra("articleData");
+
+        Toolbar toolbar = findViewById(R.id.newsActivityToolbar);
+        TextView title = findViewById(R.id.newsActivityTitle);
+        TextView date = findViewById(R.id.newsActivityDate);
+        TextView reference = findViewById(R.id.newsActivityReference);
+        TextView article = findViewById(R.id.newsActivityArticle);
 
         // toolbar
-        Toolbar toolbar = findViewById(R.id.toolbarNewsActivity);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -28,13 +35,15 @@ public class NewsActivity extends AppCompatActivity {
         }
 
         // content
-        ((TextView)findViewById(R.id.titleNewsActivity)).setText(newsData.title);
-        ((TextView)findViewById(R.id.dateNewsActivity)).setText(newsData.datetime);
-        ((TextView)findViewById(R.id.referenceNewsActivity)).setText(newsData.reference);
-        if (Build.VERSION.SDK_INT >= 24)
-            ((TextView)findViewById(R.id.articleNewsActivity)).setText(Html.fromHtml(newsData.article, Html.FROM_HTML_MODE_COMPACT));
-        else
-            ((TextView)findViewById(R.id.articleNewsActivity)).setText(Html.fromHtml(newsData.article));
+        title.setText(articleData.title);
+        date.setText(articleData.datetime);
+        reference.setText(articleData.reference);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            article.setText(Html.fromHtml(articleData.article, Html.FROM_HTML_MODE_LEGACY));
+        } else {
+            article.setText(Html.fromHtml(articleData.article));
+        }
+        article.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @Override

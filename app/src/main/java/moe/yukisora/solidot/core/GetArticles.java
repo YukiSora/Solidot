@@ -18,19 +18,19 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import moe.yukisora.solidot.SolidotApplication;
-import moe.yukisora.solidot.modles.NewsData;
+import moe.yukisora.solidot.modles.ArticleData;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class GetNews {
-    public static void getNews(String url, Observer<ArrayList<NewsData>> observer) {
-        downloadNews(url)
-                .map(new Function<String, ArrayList<NewsData>>() {
+public class GetArticles {
+    public static void getArticles(String url, Observer<ArrayList<ArticleData>> observer) {
+        downloadArticles(url)
+                .map(new Function<String, ArrayList<ArticleData>>() {
                     @Override
-                    public ArrayList<NewsData> apply(@NonNull String html) throws Exception {
-                        return parseNews(html);
+                    public ArrayList<ArticleData> apply(@NonNull String html) throws Exception {
+                        return parseArticles(html);
                     }
                 })
                 .observeOn(Schedulers.io())
@@ -38,7 +38,7 @@ public class GetNews {
                 .subscribe(observer);
     }
 
-    private static Observable<String> downloadNews(final String url) {
+    private static Observable<String> downloadArticles(final String url) {
         return Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(@NonNull final ObservableEmitter<String> emitter) throws Exception {
@@ -66,12 +66,12 @@ public class GetNews {
         });
     }
 
-    private static ArrayList<NewsData> parseNews(String html) {
-        ArrayList<NewsData> newsDatas = new ArrayList<>();
+    private static ArrayList<ArticleData> parseArticles(String html) {
+        ArrayList<ArticleData> articleDatas = new ArrayList<>();
 
         Document document = Jsoup.parse(html);
         for (Element block : document.select("div.block_m")) {
-            NewsData newsData = new NewsData();
+            ArticleData articleData = new ArticleData();
 
             // title block
             Element titleBlock = block.select("div.bg_htit").first();
@@ -79,28 +79,28 @@ public class GetNews {
             // sid
             Matcher m = Pattern.compile("\\d+").matcher(titleBlockA.attr("href"));
             if (m.find()) {
-                newsData.sid = Integer.parseInt(m.group());
+                articleData.sid = Integer.parseInt(m.group());
             }
             // title
-            newsData.title = titleBlockA.text();
+            articleData.title = titleBlockA.text();
 
             // title block
             Element timeBlock = block.select("div.talk_time").first();
             // datetime
             String datetime = timeBlock.ownText();
-            newsData.datetime = datetime.substring(3, datetime.length() - 4);
+            articleData.datetime = datetime.substring(3, datetime.length() - 4);
             // reference
             Element timeBlockB = timeBlock.select("b").first();
-            newsData.reference = timeBlockB.text();
+            articleData.reference = timeBlockB.text();
 
             // content block
             Element contentBlock = block.select("div.p_content").first();
             // article
-            newsData.article = contentBlock.select("div.p_mainnew").html();
+            articleData.article = contentBlock.select("div.p_mainnew").html();
 
-            newsDatas.add(newsData);
+            articleDatas.add(articleData);
         }
 
-        return newsDatas;
+        return articleDatas;
     }
 }

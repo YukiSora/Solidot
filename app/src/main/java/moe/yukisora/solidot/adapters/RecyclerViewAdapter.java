@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import moe.yukisora.solidot.R;
 import moe.yukisora.solidot.fragments.ArticleFragment;
-import moe.yukisora.solidot.modles.NewsData;
+import moe.yukisora.solidot.modles.ArticleData;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private ArticleFragment fragment;
@@ -28,17 +28,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final NewsData newsData = fragment.getNewsDatas().get(position);
+        final ArticleData articleData = fragment.getArticleDatas().get(position);
 
-        holder.title.setText(newsData.title);
-        holder.date.setText(newsData.datetime);
-        holder.reference.setText(newsData.reference);
+        holder.title.setText(articleData.title);
+        holder.date.setText(articleData.datetime);
+        holder.reference.setText(articleData.reference);
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent("moe.yukisora.solidot.NewsActivity");
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("newsData", newsData);
+                bundle.putSerializable("articleData", articleData);
                 intent.putExtras(bundle);
                 fragment.startActivity(intent);
             }
@@ -47,7 +47,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public int getItemCount() {
-        return fragment.getNewsDatas().size();
+        return fragment.getArticleDatas().size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -59,10 +59,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public ViewHolder(View view) {
             super(view);
 
-            relativeLayout = view.findViewById(R.id.relativeLayoutItemView);
-            title = view.findViewById(R.id.titleItemView);
-            date = view.findViewById(R.id.dateItemView);
-            reference = view.findViewById(R.id.referenceItemView);
+            relativeLayout = view.findViewById(R.id.newsItemRelativeLayout);
+            title = view.findViewById(R.id.newsItemTitle);
+            date = view.findViewById(R.id.newsItemDate);
+            reference = view.findViewById(R.id.newsItemReference);
         }
     }
 }

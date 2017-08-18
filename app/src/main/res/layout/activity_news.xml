@@ -12,7 +12,7 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbarNewsActivity"
+            android:id="@+id/newsActivityToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -40,19 +40,19 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/titleNewsActivity"
+                    android:id="@+id/newsActivityTitle"
                     style="@style/AppTheme.ArticleTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:id="@+id/dateNewsActivity"
+                    android:id="@+id/newsActivityDate"
                     style="@style/AppTheme.ArticleDetail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:id="@+id/referenceNewsActivity"
+                    android:id="@+id/newsActivityReference"
                     style="@style/AppTheme.ArticleDetail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -60,7 +60,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/articleNewsActivity"
+                android:id="@+id/newsActivityArticle"
                 style="@style/AppTheme.Article"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

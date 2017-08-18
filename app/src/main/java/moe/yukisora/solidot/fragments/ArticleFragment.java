@@ -25,12 +25,12 @@ import io.reactivex.disposables.Disposable;
 import moe.yukisora.solidot.R;
 import moe.yukisora.solidot.SolidotApplication;
 import moe.yukisora.solidot.adapters.RecyclerViewAdapter;
-import moe.yukisora.solidot.core.GetNews;
+import moe.yukisora.solidot.core.GetArticles;
 import moe.yukisora.solidot.interfaces.RecyclerViewOnScrollListener;
-import moe.yukisora.solidot.modles.NewsData;
+import moe.yukisora.solidot.modles.ArticleData;
 
 public class ArticleFragment extends Fragment {
-    private ArrayList<NewsData> newsDatas;
+    private ArrayList<ArticleData> articleDatas;
     private Calendar calendar;
     private Handler handler;
     private RecyclerViewAdapter adapter;
@@ -56,13 +56,13 @@ public class ArticleFragment extends Fragment {
         handler = new Handler();
         initFragment();
         initRecyclerView(view);
-        getNews();
+        getArticles();
 
         return view;
     }
 
     private void initFragment() {
-        newsDatas = new ArrayList<>();
+        articleDatas = new ArrayList<>();
         calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+08:00"));
         isDownloading = false;
     }
@@ -90,7 +90,7 @@ public class ArticleFragment extends Fragment {
         recyclerView.addOnScrollListener(new RecyclerViewOnScrollListener() {
             @Override
             public void onBottom() {
-                getNews();
+                getArticles();
             }
 
             @Override
@@ -118,20 +118,20 @@ public class ArticleFragment extends Fragment {
         return date;
     }
 
-    public void getNews() {
+    public void getArticles() {
         if (!isDownloading) {
             isDownloading = true;
 
-            GetNews.getNews("http://www.solidot.org/?issue=" + nextDate(), new Observer<ArrayList<NewsData>>() {
+            GetArticles.getArticles("http://www.solidot.org/?issue=" + nextDate(), new Observer<ArrayList<ArticleData>>() {
                 @Override
                 public void onSubscribe(@NonNull Disposable d) {
                 }
 
                 @Override
-                public void onNext(@NonNull ArrayList<NewsData> newsDatas) {
-                    final int startPosition = ArticleFragment.this.newsDatas.size();
-                    ArticleFragment.this.newsDatas.addAll(newsDatas);
-                    final int EndPosition = ArticleFragment.this.newsDatas.size();
+                public void onNext(@NonNull ArrayList<ArticleData> articleDatas) {
+                    final int startPosition = ArticleFragment.this.articleDatas.size();
+                    ArticleFragment.this.articleDatas.addAll(articleDatas);
+                    final int EndPosition = ArticleFragment.this.articleDatas.size();
 
                     handler.post(new Runnable() {
                         @Override
@@ -160,7 +160,7 @@ public class ArticleFragment extends Fragment {
         }
     }
 
-    public ArrayList<NewsData> getNewsDatas() {
-        return newsDatas;
+    public ArrayList<ArticleData> getArticleDatas() {
+        return articleDatas;
     }
 }
