@@ -150,6 +150,7 @@ public class ArticleFragment extends Fragment {
                         }
                     });
                     Log.e(SolidotApplication.TAG, e.toString());
+                    isDownloading = false;
                 }
 
                 @Override
