@@ -60,10 +60,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public ViewHolder(View view) {
             super(view);
 
-            relativeLayout = (RelativeLayout)view.findViewById(R.id.relativeLayoutItemView);
-            title = (TextView)view.findViewById(R.id.titleItemView);
-            date = (TextView)view.findViewById(R.id.dateItemView);
-            reference = (TextView)view.findViewById(R.id.referenceItemView);
+            relativeLayout = view.findViewById(R.id.relativeLayoutItemView);
+            title = view.findViewById(R.id.titleItemView);
+            date = view.findViewById(R.id.dateItemView);
+            reference = view.findViewById(R.id.referenceItemView);
         }
     }
 }

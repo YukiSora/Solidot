@@ -46,14 +46,14 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager = getFragmentManager();
 
         //Tool Bar
-        toolbar = (Toolbar)findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         //Floating Action Button
-        floatingActionButton = (FloatingActionButton)findViewById(R.id.floatingActionButton);
+        floatingActionButton = findViewById(R.id.floatingActionButton);
 
         //Drawer Layout
-        drawer = (DrawerLayout)findViewById(R.id.drawerLayout);
+        drawer = findViewById(R.id.drawerLayout);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);

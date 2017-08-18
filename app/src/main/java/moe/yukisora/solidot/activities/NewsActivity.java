@@ -20,7 +20,7 @@ public class NewsActivity extends AppCompatActivity {
         NewsData newsData = (NewsData)getIntent().getSerializableExtra("newsData");
 
         //Tool Bar
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbarNewsActivity);
+        Toolbar toolbar = findViewById(R.id.toolbarNewsActivity);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

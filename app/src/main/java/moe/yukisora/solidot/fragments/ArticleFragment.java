@@ -2,6 +2,7 @@ package moe.yukisora.solidot.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -17,15 +18,18 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import moe.yukisora.solidot.core.NewsManager;
 import moe.yukisora.solidot.R;
 import moe.yukisora.solidot.adapters.RecyclerViewAdapter;
+import moe.yukisora.solidot.core.NewsManager;
+import moe.yukisora.solidot.interfaces.GetNewsCallback;
 import moe.yukisora.solidot.interfaces.RecyclerViewOnScrollListener;
 
 public class ArticleFragment extends Fragment {
     private ArrayList<Integer> newsDatas;
     private Calendar calendar;
+    private Handler handler;
     private RecyclerViewAdapter adapter;
+    private boolean isDownloading;
 
     public static ArticleFragment newInstance() {
         Bundle args = new Bundle();
@@ -44,9 +48,10 @@ public class ArticleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_article, container, false);
 
+        handler = new Handler();
         initFragment();
         initRecyclerView(view);
-        NewsManager.getInstance().getNewsByDate(this, getDate());
+        getNews();
 
         return view;
     }
@@ -54,11 +59,12 @@ public class ArticleFragment extends Fragment {
     private void initFragment() {
         newsDatas = new ArrayList<>();
         calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+08:00"));
+        isDownloading = false;
     }
 
     private void initRecyclerView(View view) {
         //RecyclerView
-        final RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
+        final RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
 
         //Layout
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -79,7 +85,7 @@ public class ArticleFragment extends Fragment {
         recyclerView.addOnScrollListener(new RecyclerViewOnScrollListener() {
             @Override
             public void onBottom() {
-                NewsManager.getInstance().getNewsByDate(ArticleFragment.this, getDate());
+               getNews();
             }
 
             @Override
@@ -89,7 +95,7 @@ public class ArticleFragment extends Fragment {
         });
 
         //Floating Action Button
-        FloatingActionButton floatingActionButton = (FloatingActionButton)getActivity().findViewById(R.id.floatingActionButton);
+        FloatingActionButton floatingActionButton = getActivity().findViewById(R.id.floatingActionButton);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,7 +104,7 @@ public class ArticleFragment extends Fragment {
         });
     }
 
-    public String getDate() {
+    public String nextDate() {
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DATE);
@@ -106,6 +112,33 @@ public class ArticleFragment extends Fragment {
         calendar.add(Calendar.DATE, -1);
 
         return date;
+    }
+
+    public void getNews() {
+        if (!isDownloading) {
+            isDownloading = true;
+            NewsManager.getInstance().getNews(nextDate(), new GetNewsCallback() {
+                @Override
+                public void onResponse(final ArrayList<Integer> newsDatas) {
+                    final int startPosition = ArticleFragment.this.newsDatas.size();
+                    final int itemCount = newsDatas.size();
+                    ArticleFragment.this.newsDatas.addAll(newsDatas);
+                    //render
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            getAdapter().notifyItemRangeInserted(startPosition, startPosition + itemCount);
+                        }
+                    });
+                    isDownloading = false;
+                }
+
+                @Override
+                public void onFailure() {
+
+                }
+            });
+        }
     }
 
     public ArrayList<Integer> getNewsDatas() {

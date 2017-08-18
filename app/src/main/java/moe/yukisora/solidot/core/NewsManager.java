@@ -1,18 +1,16 @@
 package moe.yukisora.solidot.core;
 
-import android.app.Fragment;
-import android.os.Handler;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import moe.yukisora.solidot.SolidotApplication;
-import moe.yukisora.solidot.fragments.ArticleFragment;
+import moe.yukisora.solidot.interfaces.GetNewsCallback;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
@@ -20,11 +18,8 @@ import okhttp3.Response;
 
 public class NewsManager {
     private static NewsManager newsManager;
-    private Handler handler;
-    private boolean isDownloading;
 
     private NewsManager() {
-        handler = new Handler();
     }
 
     public static NewsManager getInstance() {
@@ -34,14 +29,7 @@ public class NewsManager {
         return newsManager;
     }
 
-    public void getNewsByDate(Fragment fragment, String date) {
-        if (!isDownloading) {
-            getNews((ArticleFragment)fragment, date);
-        }
-    }
-
-    private void getNews(final ArticleFragment fragment, String date) {
-        isDownloading = true;
+    public void getNews(String date, final GetNewsCallback callback) {
         Request request = new Request.Builder()
                 .url("http://www.solidot.org/?issue=" + date)
                 .build();
@@ -56,6 +44,7 @@ public class NewsManager {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     //parse
+                    ArrayList<Integer> newsDatas = new ArrayList<>();
                     Document document = Jsoup.parse(response.body().string());
                     for (Element block : document.select("div.block_m")) {
                         //sid
@@ -67,17 +56,9 @@ public class NewsManager {
 
                         //insert
                         NewsCache.getInstance().getNews(sid);
-                        fragment.getNewsDatas().add(sid);
-
-                        //render
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                fragment.getAdapter().notifyItemInserted(fragment.getNewsDatas().size() - 1);
-                            }
-                        });
-                        isDownloading = false;
+                        newsDatas.add(sid);
                     }
+                    callback.onResponse(newsDatas);
                 }
             }
         });
