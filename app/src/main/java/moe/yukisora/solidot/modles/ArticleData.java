@@ -8,7 +8,6 @@ public class ArticleData implements Serializable {
     public String datetime;
     public String reference;
     public String article;
-    public int numberOfView;
 
     @Override
     public boolean equals(Object obj) {
@@ -18,5 +17,16 @@ public class ArticleData implements Serializable {
     @Override
     public int hashCode() {
         return sid;
+    }
+
+    @Override
+    public String toString() {
+        return "ArticleData {\n" +
+                "    sid: " + sid + ",\n" +
+                "    title: \"" + title + "\",\n" +
+                "    datetime: \"" + datetime + "\",\n" +
+                "    reference: \"" + reference + "\",\n" +
+                "    article: \"" + article + "\",\n" +
+                "}";
     }
 }
