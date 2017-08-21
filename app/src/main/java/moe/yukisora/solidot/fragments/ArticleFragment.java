@@ -30,9 +30,11 @@ import moe.yukisora.solidot.interfaces.RecyclerViewOnScrollListener;
 import moe.yukisora.solidot.modles.ArticleData;
 
 public class ArticleFragment extends Fragment {
-    private ArrayList<ArticleData> articleDatas;
+    private ArrayList<ArticleData> articles;
+    private ArticleData loadingArticle;
     private Calendar calendar;
     private Handler handler;
+    private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
     private boolean isDownloading;
 
@@ -47,6 +49,9 @@ public class ArticleFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        loadingArticle = new ArticleData();
+        loadingArticle.sid = ArticleData.LOADING_SID;
     }
 
     @Override
@@ -56,20 +61,20 @@ public class ArticleFragment extends Fragment {
         handler = new Handler();
         initFragment();
         initRecyclerView(view);
-        getArticles();
+        downloadArticles();
 
         return view;
     }
 
     private void initFragment() {
-        articleDatas = new ArrayList<>();
+        articles = new ArrayList<>();
         calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+08:00"));
         isDownloading = false;
     }
 
     private void initRecyclerView(View view) {
         // recycler view
-        final RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView = view.findViewById(R.id.recyclerView);
 
         // layout
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -90,7 +95,7 @@ public class ArticleFragment extends Fragment {
         recyclerView.addOnScrollListener(new RecyclerViewOnScrollListener() {
             @Override
             public void onBottom() {
-                getArticles();
+                downloadArticles();
             }
 
             @Override
@@ -108,7 +113,7 @@ public class ArticleFragment extends Fragment {
         });
     }
 
-    public String nextDate() {
+    private String getDate() {
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DATE);
@@ -118,49 +123,70 @@ public class ArticleFragment extends Fragment {
         return date;
     }
 
-    public void getArticles() {
+    private void rollBackDate() {
+        calendar.add(Calendar.DATE, +1);
+    }
+
+    private void downloadArticles() {
         if (!isDownloading) {
             isDownloading = true;
 
-            GetArticles.getArticles("http://www.solidot.org/?issue=" + nextDate(), new Observer<ArrayList<ArticleData>>() {
+            // show loading item
+            final int position = articles.size() - 1;
+            if (articles.isEmpty() || articles.get(position).sid != ArticleData.LOADING_SID) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        articles.add(loadingArticle);
+                        adapter.notifyItemInserted(position);
+                        recyclerView.smoothScrollToPosition(position + 1);
+                    }
+                });
+            }
+
+            GetArticles.getArticles("http://www.solidot.org/?issue=" + getDate(), new Observer<ArrayList<ArticleData>>() {
                 @Override
                 public void onSubscribe(@NonNull Disposable d) {
                 }
 
                 @Override
-                public void onNext(@NonNull ArrayList<ArticleData> articleDatas) {
-                    if (articleDatas.size() > 0) {
-                        final int startPosition = ArticleFragment.this.articleDatas.size();
-                        ArticleFragment.this.articleDatas.addAll(articleDatas);
-                        final int EndPosition = ArticleFragment.this.articleDatas.size();
+                public void onNext(@NonNull final ArrayList<ArticleData> articles) {
+                    isDownloading = false;
+                    final int itemCount = articles.size();
+                    if (itemCount > 0) {
+                        final int startPosition = ArticleFragment.this.articles.size() - 1;
+                        final int endPosition = startPosition + itemCount;
 
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                adapter.notifyItemRangeInserted(startPosition, EndPosition);
-                                isDownloading = false;
+                                ArticleFragment.this.articles.addAll(startPosition, articles);
+                                adapter.notifyItemRangeChanged(startPosition, itemCount);
                             }
                         });
 
-                        if (EndPosition > 10) {
+                        if (itemCount > 5 && endPosition > 10) {
                             return;
                         }
                     }
 
-                    isDownloading = false;
-                    getArticles();
+                    downloadArticles();
                 }
 
                 @Override
                 public void onError(@NonNull Throwable e) {
-                    handler.post(new Runnable() {
+                    final int position = articles.size() - 1;
+                    handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            isDownloading = false;
+                            articles.remove(position);
+                            adapter.notifyItemRemoved(position);
+                            rollBackDate();
                             Toast.makeText(getActivity(), "Fetch news failed.", Toast.LENGTH_SHORT).show();
                         }
-                    });
+                    }, 1000);
                     Log.e(SolidotApplication.TAG, e.toString());
-                    isDownloading = false;
                 }
 
                 @Override
@@ -170,7 +196,7 @@ public class ArticleFragment extends Fragment {
         }
     }
 
-    public ArrayList<ArticleData> getArticleDatas() {
-        return articleDatas;
+    public ArrayList<ArticleData> getArticles() {
+        return articles;
     }
 }

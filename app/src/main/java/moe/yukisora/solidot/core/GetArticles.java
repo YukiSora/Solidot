@@ -66,7 +66,7 @@ public class GetArticles {
     }
 
     private static ArrayList<ArticleData> parseArticles(String html) {
-        ArrayList<ArticleData> articleDatas = new ArrayList<>();
+        ArrayList<ArticleData> articles = new ArrayList<>();
 
         Document document = Jsoup.parse(html);
         for (Element block : document.select("div.block_m")) {
@@ -97,9 +97,9 @@ public class GetArticles {
             // content
             articleData.content = contentBlock.select("div.p_mainnew").html();
 
-            articleDatas.add(articleData);
+            articles.add(articleData);
         }
 
-        return articleDatas;
+        return articles;
     }
 }

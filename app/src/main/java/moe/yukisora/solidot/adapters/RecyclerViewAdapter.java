@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +14,10 @@ import moe.yukisora.solidot.R;
 import moe.yukisora.solidot.fragments.ArticleFragment;
 import moe.yukisora.solidot.modles.ArticleData;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private enum ITEM_TYPE {
-        ITEM_TYPE_IMAGE,
-        ITEM_TYPE_TEXT
+        ITEM_TYPE_ARTICLE,
+        ITEM_TYPE_LOADING
     }
     private ArticleFragment fragment;
 
@@ -27,48 +26,74 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.article_item_view, parent, false));
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        if (viewType == ITEM_TYPE.ITEM_TYPE_ARTICLE.ordinal()) {
+            return new ArticleViewHolder(inflater.inflate(R.layout.article_item_view, parent, false));
+        } else {
+            return new LoadingViewHolder(inflater.inflate(R.layout.loading_item_view, parent, false));
+        }
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        final ArticleData articleData = fragment.getArticleDatas().get(position);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof ArticleViewHolder) {
+            ArticleViewHolder articleHolder = (ArticleViewHolder)holder;
+            ArticleData article = fragment.getArticles().get(position);
 
-        holder.title.setText(articleData.title);
-        holder.date.setText(articleData.datetime);
-        holder.reference.setText(articleData.reference);
-        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i("poi", articleData.toString());
-                Intent intent = new Intent("moe.yukisora.solidot.ArticleActivity");
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("articleData", articleData);
-                intent.putExtras(bundle);
-                fragment.startActivity(intent);
-            }
-        });
+            articleHolder.bindData(article);
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (fragment.getArticles().get(position).sid == 0) {
+            return ITEM_TYPE.ITEM_TYPE_LOADING.ordinal();
+        } else {
+            return ITEM_TYPE.ITEM_TYPE_ARTICLE.ordinal();
+        }
     }
 
     @Override
     public int getItemCount() {
-        return fragment.getArticleDatas().size();
+        return fragment.getArticles().size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    private class ArticleViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout relativeLayout;
         public TextView title;
         public TextView date;
         public TextView reference;
 
-        public ViewHolder(View view) {
+        public ArticleViewHolder(View view) {
             super(view);
 
             relativeLayout = view.findViewById(R.id.articleItemRelativeLayout);
             title = view.findViewById(R.id.articleItemTitle);
             date = view.findViewById(R.id.articleItemDate);
             reference = view.findViewById(R.id.articleItemReference);
+        }
+
+        public void bindData(final ArticleData article) {
+            title.setText(article.title);
+            date.setText(article.datetime);
+            reference.setText(article.reference);
+            relativeLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent("moe.yukisora.solidot.activities.ArticleActivity");
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("articleData", article);
+                    intent.putExtras(bundle);
+                    fragment.startActivity(intent);
+                }
+            });
+        }
+    }
+
+    private class LoadingViewHolder extends RecyclerView.ViewHolder {
+        public LoadingViewHolder(View view) {
+            super(view);
         }
     }
 }

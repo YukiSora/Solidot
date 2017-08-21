@@ -34,7 +34,7 @@
 
             <intent-filter>
 
-                <action android:name="moe.yukisora.solidot.NewsActivity" />
+                <action android:name="moe.yukisora.solidot.activities.ArticleActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
 
