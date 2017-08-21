@@ -56,7 +56,6 @@ public class GetArticles {
                     public void onResponse(Call call, Response response) throws IOException {
                         if (response.isSuccessful() && response.body() != null) {
                             emitter.onNext(response.body().string());
-                            emitter.onComplete();
                         } else {
                             emitter.onError(new IOException("Response failed."));
                         }

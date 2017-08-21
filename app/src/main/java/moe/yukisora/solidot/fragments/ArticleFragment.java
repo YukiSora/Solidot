@@ -129,16 +129,22 @@ public class ArticleFragment extends Fragment {
 
                 @Override
                 public void onNext(@NonNull ArrayList<ArticleData> articleDatas) {
-                    final int startPosition = ArticleFragment.this.articleDatas.size();
-                    ArticleFragment.this.articleDatas.addAll(articleDatas);
-                    final int EndPosition = ArticleFragment.this.articleDatas.size();
+                    if (articleDatas.size() > 0) {
+                        final int startPosition = ArticleFragment.this.articleDatas.size();
+                        ArticleFragment.this.articleDatas.addAll(articleDatas);
+                        final int EndPosition = ArticleFragment.this.articleDatas.size();
 
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            adapter.notifyItemRangeInserted(startPosition, EndPosition);
-                        }
-                    });
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.notifyItemRangeInserted(startPosition, EndPosition);
+                                isDownloading = false;
+                            }
+                        });
+                    } else {
+                        isDownloading = false;
+                        getArticles();
+                    }
                 }
 
                 @Override
@@ -155,7 +161,6 @@ public class ArticleFragment extends Fragment {
 
                 @Override
                 public void onComplete() {
-                    isDownloading = false;
                 }
             });
         }
