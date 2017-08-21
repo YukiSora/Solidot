@@ -141,10 +141,14 @@ public class ArticleFragment extends Fragment {
                                 isDownloading = false;
                             }
                         });
-                    } else {
-                        isDownloading = false;
-                        getArticles();
+
+                        if (EndPosition > 10) {
+                            return;
+                        }
                     }
+
+                    isDownloading = false;
+                    getArticles();
                 }
 
                 @Override
