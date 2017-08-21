@@ -16,6 +16,10 @@ import moe.yukisora.solidot.fragments.ArticleFragment;
 import moe.yukisora.solidot.modles.ArticleData;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+    private enum ITEM_TYPE {
+        ITEM_TYPE_IMAGE,
+        ITEM_TYPE_TEXT
+    }
     private ArticleFragment fragment;
 
     public RecyclerViewAdapter(Fragment fragment) {
@@ -24,7 +28,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.news_item_view, parent, false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.article_item_view, parent, false));
     }
 
     @Override
@@ -38,7 +42,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onClick(View view) {
                 Log.i("poi", articleData.toString());
-                Intent intent = new Intent("moe.yukisora.solidot.NewsActivity");
+                Intent intent = new Intent("moe.yukisora.solidot.ArticleActivity");
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("articleData", articleData);
                 intent.putExtras(bundle);
@@ -61,10 +65,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public ViewHolder(View view) {
             super(view);
 
-            relativeLayout = view.findViewById(R.id.newsItemRelativeLayout);
-            title = view.findViewById(R.id.newsItemTitle);
-            date = view.findViewById(R.id.newsItemDate);
-            reference = view.findViewById(R.id.newsItemReference);
+            relativeLayout = view.findViewById(R.id.articleItemRelativeLayout);
+            title = view.findViewById(R.id.articleItemTitle);
+            date = view.findViewById(R.id.articleItemDate);
+            reference = view.findViewById(R.id.articleItemReference);
         }
     }
 }

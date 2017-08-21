@@ -13,19 +13,18 @@ import android.widget.TextView;
 import moe.yukisora.solidot.R;
 import moe.yukisora.solidot.modles.ArticleData;
 
-public class NewsActivity extends AppCompatActivity {
-    private ArticleData articleData;
+public class ArticleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_news);
-        articleData = (ArticleData)getIntent().getSerializableExtra("articleData");
+        setContentView(R.layout.activity_article);
+        ArticleData articleData = (ArticleData)getIntent().getSerializableExtra("articleData");
 
-        Toolbar toolbar = findViewById(R.id.newsActivityToolbar);
-        TextView title = findViewById(R.id.newsActivityTitle);
-        TextView date = findViewById(R.id.newsActivityDate);
-        TextView reference = findViewById(R.id.newsActivityReference);
-        TextView article = findViewById(R.id.newsActivityArticle);
+        Toolbar toolbar = findViewById(R.id.articleActivityToolbar);
+        TextView title = findViewById(R.id.articleActivityTitle);
+        TextView date = findViewById(R.id.articleActivityDate);
+        TextView reference = findViewById(R.id.articleActivityReference);
+        TextView content = findViewById(R.id.articleActivityContent);
 
         // toolbar
         setSupportActionBar(toolbar);
@@ -39,11 +38,11 @@ public class NewsActivity extends AppCompatActivity {
         date.setText(articleData.datetime);
         reference.setText(articleData.reference);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            article.setText(Html.fromHtml(articleData.article, Html.FROM_HTML_MODE_LEGACY));
+            content.setText(Html.fromHtml(articleData.content, Html.FROM_HTML_MODE_LEGACY));
         } else {
-            article.setText(Html.fromHtml(articleData.article));
+            content.setText(Html.fromHtml(articleData.content));
         }
-        article.setMovementMethod(LinkMovementMethod.getInstance());
+        content.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @Override

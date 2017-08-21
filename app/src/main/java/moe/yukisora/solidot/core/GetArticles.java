@@ -94,8 +94,8 @@ public class GetArticles {
 
             // content block
             Element contentBlock = block.select("div.p_content").first();
-            // article
-            articleData.article = contentBlock.select("div.p_mainnew").html();
+            // content
+            articleData.content = contentBlock.select("div.p_mainnew").html();
 
             articleDatas.add(articleData);
         }

@@ -28,7 +28,7 @@
         </activity>
 
         <activity
-            android:name=".activities.NewsActivity"
+            android:name=".activities.ArticleActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
 

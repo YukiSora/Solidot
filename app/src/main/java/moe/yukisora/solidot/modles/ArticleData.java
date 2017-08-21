@@ -7,7 +7,7 @@ public class ArticleData implements Serializable {
     public String title;
     public String datetime;
     public String reference;
-    public String article;
+    public String content;
 
     @Override
     public boolean equals(Object obj) {
@@ -26,7 +26,7 @@ public class ArticleData implements Serializable {
                 "    title: \"" + title + "\",\n" +
                 "    datetime: \"" + datetime + "\",\n" +
                 "    reference: \"" + reference + "\",\n" +
-                "    article: \"" + article + "\",\n" +
+                "    content: \"" + content + "\",\n" +
                 "}";
     }
 }
