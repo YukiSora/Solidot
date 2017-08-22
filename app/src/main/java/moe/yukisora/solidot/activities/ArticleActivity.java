@@ -23,7 +23,7 @@ public class ArticleActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
-        ArticleData article = (ArticleData)getIntent().getSerializableExtra("articleData");
+        ArticleData article = getIntent().getParcelableExtra("articleData");
 
         detector = new GestureDetectorCompat(this, new GestureListener());
 

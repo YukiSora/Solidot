@@ -70,7 +70,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 public void onClick(View view) {
                     Intent intent = new Intent("moe.yukisora.solidot.activities.ArticleActivity");
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("articleData", article);
+                    bundle.putParcelable("articleData", article);
                     intent.putExtras(bundle);
                     fragment.startActivity(intent);
                 }
