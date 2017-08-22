@@ -90,7 +90,7 @@ public class GetArticles {
             articleData.datetime = datetime.substring(3, datetime.length() - 4);
             // reference
             Element timeBlockB = timeBlock.select("b").first();
-            articleData.reference = timeBlockB.text();
+            articleData.reference = timeBlockB.text().replaceAll("\\s+","").substring(2);
 
             // content block
             Element contentBlock = block.select("div.p_content").first();

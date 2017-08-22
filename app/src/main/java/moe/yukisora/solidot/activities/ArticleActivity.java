@@ -18,7 +18,7 @@ public class ArticleActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
-        ArticleData articleData = (ArticleData)getIntent().getSerializableExtra("articleData");
+        ArticleData article = (ArticleData)getIntent().getSerializableExtra("articleData");
 
         Toolbar toolbar = findViewById(R.id.articleActivityToolbar);
         TextView title = findViewById(R.id.articleActivityTitle);
@@ -34,13 +34,17 @@ public class ArticleActivity extends AppCompatActivity {
         }
 
         // content
-        title.setText(articleData.title);
-        date.setText(articleData.datetime);
-        reference.setText(articleData.reference);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            content.setText(Html.fromHtml(articleData.content, Html.FROM_HTML_MODE_LEGACY));
+        title.setText(article.title);
+        date.setText(article.datetime);
+        if (!article.reference.isEmpty()) {
+            reference.setText("来自" + article.reference);
         } else {
-            content.setText(Html.fromHtml(articleData.content));
+            reference.setText("");
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            content.setText(Html.fromHtml(article.content, Html.FROM_HTML_MODE_LEGACY));
+        } else {
+            content.setText(Html.fromHtml(article.content));
         }
         content.setMovementMethod(LinkMovementMethod.getInstance());
     }

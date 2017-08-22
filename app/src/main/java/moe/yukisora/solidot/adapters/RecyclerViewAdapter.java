@@ -60,7 +60,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public void bindData(final ArticleData article) {
             title.setText(article.title);
             date.setText(article.datetime);
-            reference.setText(article.reference);
+            if (!article.reference.isEmpty()) {
+                reference.setText("来自" + article.reference);
+            } else {
+                reference.setText("");
+            }
             relativeLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
