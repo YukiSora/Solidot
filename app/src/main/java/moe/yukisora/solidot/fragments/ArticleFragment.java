@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -60,7 +61,7 @@ public class ArticleFragment extends Fragment {
 
         handler = new Handler();
         initFragment();
-        initRecyclerView(view);
+        initView(view);
         downloadArticles();
 
         return view;
@@ -72,7 +73,7 @@ public class ArticleFragment extends Fragment {
         isDownloading = false;
     }
 
-    private void initRecyclerView(View view) {
+    private void initView(View view) {
         // recycler view
         recyclerView = view.findViewById(R.id.recyclerView);
 
@@ -102,6 +103,24 @@ public class ArticleFragment extends Fragment {
             public void onTop() {
             }
         });
+
+        //swipe refresh layout
+        final SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
+                        initFragment();
+                        adapter.notifyDataSetChanged();
+                        downloadArticles();
+                    }
+                });
+            }
+        });
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
 
         // floating action button
         FloatingActionButton floatingActionButton = getActivity().findViewById(R.id.floatingActionButton);
