@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,16 +29,15 @@ import moe.yukisora.solidot.R;
 import moe.yukisora.solidot.SolidotApplication;
 import moe.yukisora.solidot.adapters.RecyclerViewAdapter;
 import moe.yukisora.solidot.core.GetArticles;
-import moe.yukisora.solidot.interfaces.RecyclerViewOnScrollListener;
 import moe.yukisora.solidot.modles.ArticleData;
 
 public class ArticleFragment extends Fragment {
     private ArrayList<ArticleData> articles;
-    private ArticleData loadingArticle;
     private Calendar calendar;
     private Handler handler;
     private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
+    private TwinklingRefreshLayout refreshLayout;
     private boolean isDownloading;
 
     public static ArticleFragment newInstance() {
@@ -51,18 +52,16 @@ public class ArticleFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        loadingArticle = new ArticleData();
-        loadingArticle.sid = ArticleData.LOADING_SID;
+        articles = new ArrayList<>();
+        handler = new Handler();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_article, container, false);
 
-        handler = new Handler();
-        initFragment();
         initView(view);
-        downloadArticles();
+        refreshLayout.startRefresh();
 
         return view;
     }
@@ -92,35 +91,31 @@ public class ArticleFragment extends Fragment {
         // animator
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        // scroll listener
-        recyclerView.addOnScrollListener(new RecyclerViewOnScrollListener() {
+        refreshLayout = view.findViewById(R.id.refreshLayout);
+        refreshLayout.setAutoLoadMore(true);
+        refreshLayout.setOnRefreshListener(new RefreshListenerAdapter(){
             @Override
-            public void onBottom() {
-                downloadArticles();
-            }
-
-            @Override
-            public void onTop() {
-            }
-        });
-
-        //swipe refresh layout
-        final SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                handler.post(new Runnable() {
+            public void onRefresh(final TwinklingRefreshLayout refreshLayout) {
+                new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        swipeRefreshLayout.setRefreshing(false);
                         initFragment();
                         adapter.notifyDataSetChanged();
                         downloadArticles();
                     }
-                });
+                },2000);
+            }
+
+            @Override
+            public void onLoadMore(final TwinklingRefreshLayout refreshLayout) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        downloadArticles();
+                    }
+                },2000);
             }
         });
-        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
 
         // floating action button
         FloatingActionButton floatingActionButton = getActivity().findViewById(R.id.floatingActionButton);
@@ -150,19 +145,6 @@ public class ArticleFragment extends Fragment {
         if (!isDownloading) {
             isDownloading = true;
 
-            // show loading item
-            final int position = articles.size() - 1;
-            if (articles.isEmpty() || articles.get(position).sid != ArticleData.LOADING_SID) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        articles.add(loadingArticle);
-                        adapter.notifyItemInserted(position);
-                        recyclerView.smoothScrollToPosition(position + 1);
-                    }
-                });
-            }
-
             GetArticles.getArticles("http://www.solidot.org/?issue=" + getDate(), new Observer<ArrayList<ArticleData>>() {
                 @Override
                 public void onSubscribe(@NonNull Disposable d) {
@@ -173,14 +155,19 @@ public class ArticleFragment extends Fragment {
                     isDownloading = false;
                     final int itemCount = articles.size();
                     if (itemCount > 0) {
-                        final int startPosition = ArticleFragment.this.articles.size() - 1;
+                        final int startPosition = ArticleFragment.this.articles.size();
                         final int endPosition = startPosition + itemCount;
 
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                ArticleFragment.this.articles.addAll(startPosition, articles);
-                                adapter.notifyItemRangeChanged(startPosition, itemCount);
+                                ArticleFragment.this.articles.addAll(articles);
+                                adapter.notifyItemRangeInserted(startPosition, endPosition);
+                                if (startPosition == 0) {
+                                    refreshLayout.finishRefreshing();
+                                } else {
+                                    refreshLayout.finishLoadmore();
+                                }
                             }
                         });
 
@@ -194,17 +181,16 @@ public class ArticleFragment extends Fragment {
 
                 @Override
                 public void onError(@NonNull Throwable e) {
-                    final int position = articles.size() - 1;
-                    handler.postDelayed(new Runnable() {
+                    handler.post(new Runnable() {
                         @Override
                         public void run() {
                             isDownloading = false;
-                            articles.remove(position);
-                            adapter.notifyItemRemoved(position);
                             rollBackDate();
+                            refreshLayout.finishLoadmore();
+                            refreshLayout.finishRefreshing();
                             Toast.makeText(getActivity(), "Fetch news failed.", Toast.LENGTH_SHORT).show();
                         }
-                    }, 1000);
+                    });
                     Log.e(SolidotApplication.TAG, e.toString());
                 }
 

@@ -3,7 +3,6 @@ package moe.yukisora.solidot.modles;
 import java.io.Serializable;
 
 public class ArticleData implements Serializable {
-    public static final int LOADING_SID = 0;
     public int sid;
     public String title;
     public String datetime;

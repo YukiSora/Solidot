@@ -15,10 +15,6 @@ import moe.yukisora.solidot.fragments.ArticleFragment;
 import moe.yukisora.solidot.modles.ArticleData;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private enum ITEM_TYPE {
-        ITEM_TYPE_ARTICLE,
-        ITEM_TYPE_LOADING
-    }
     private ArticleFragment fragment;
 
     public RecyclerViewAdapter(Fragment fragment) {
@@ -28,11 +24,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        if (viewType == ITEM_TYPE.ITEM_TYPE_ARTICLE.ordinal()) {
-            return new ArticleViewHolder(inflater.inflate(R.layout.article_item_view, parent, false));
-        } else {
-            return new LoadingViewHolder(inflater.inflate(R.layout.loading_item_view, parent, false));
-        }
+        return new ArticleViewHolder(inflater.inflate(R.layout.article_item_view, parent, false));
     }
 
     @Override
@@ -42,15 +34,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ArticleData article = fragment.getArticles().get(position);
 
             articleHolder.bindData(article);
-        }
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        if (fragment.getArticles().get(position).sid == 0) {
-            return ITEM_TYPE.ITEM_TYPE_LOADING.ordinal();
-        } else {
-            return ITEM_TYPE.ITEM_TYPE_ARTICLE.ordinal();
         }
     }
 
@@ -88,12 +71,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     fragment.startActivity(intent);
                 }
             });
-        }
-    }
-
-    private class LoadingViewHolder extends RecyclerView.ViewHolder {
-        public LoadingViewHolder(View view) {
-            super(view);
         }
     }
 }
