@@ -85,6 +85,7 @@ public class ArticleActivity extends AppCompatActivity {
             bundle.putInt("position", position);
             intent.putExtras(bundle);
             startActivity(intent);
+            overridePendingTransition(R.anim.push_right_in, R.anim.push_left_out);
             finish();
         } else {
             Toast.makeText(this, "Loading more news.", Toast.LENGTH_SHORT).show();
@@ -93,6 +94,7 @@ public class ArticleActivity extends AppCompatActivity {
 
     private void onSwipeRight() {
         finish();
+        overridePendingTransition(0, R.anim.push_down_out);
     }
 
     private class GestureListener extends GestureDetector.SimpleOnGestureListener {
