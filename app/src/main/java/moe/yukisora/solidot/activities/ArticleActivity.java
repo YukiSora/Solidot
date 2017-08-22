@@ -1,5 +1,6 @@
 package moe.yukisora.solidot.activities;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,18 +13,22 @@ import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import moe.yukisora.solidot.R;
+import moe.yukisora.solidot.fragments.ArticleFragment;
 import moe.yukisora.solidot.modles.ArticleData;
 
 public class ArticleActivity extends AppCompatActivity {
     private GestureDetectorCompat detector;
+    private int position;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
         ArticleData article = getIntent().getParcelableExtra("articleData");
+        position = getIntent().getIntExtra("position", 0);
 
         detector = new GestureDetectorCompat(this, new GestureListener());
 
@@ -72,6 +77,18 @@ public class ArticleActivity extends AppCompatActivity {
     }
 
     private void onSwipeLeft() {
+        ArticleData article = ArticleFragment.getNextArticle(++position);
+        if (article != null) {
+            Intent intent = new Intent("moe.yukisora.solidot.activities.ArticleActivity");
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("articleData", article);
+            bundle.putInt("position", position);
+            intent.putExtras(bundle);
+            startActivity(intent);
+            finish();
+        } else {
+            Toast.makeText(this, "Loading more news.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void onSwipeRight() {

@@ -32,6 +32,7 @@ import moe.yukisora.solidot.core.GetArticles;
 import moe.yukisora.solidot.modles.ArticleData;
 
 public class ArticleFragment extends Fragment {
+    private static ArticleFragment fragment;
     private ArrayList<ArticleData> articles;
     private Calendar calendar;
     private Handler handler;
@@ -52,6 +53,7 @@ public class ArticleFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        fragment = this;
         articles = new ArrayList<>();
         handler = new Handler();
     }
@@ -203,5 +205,19 @@ public class ArticleFragment extends Fragment {
 
     public ArrayList<ArticleData> getArticles() {
         return articles;
+    }
+
+    public static ArticleData getNextArticle(int position) {
+        if (position <= fragment.getArticles().size() - 1) {
+            fragment.recyclerView.smoothScrollToPosition(position);
+            if (position == fragment.getArticles().size() - 1) {
+
+                fragment.downloadArticles();
+            }
+
+            return fragment.getArticles().get(position);
+        } else {
+            return null;
+        }
     }
 }

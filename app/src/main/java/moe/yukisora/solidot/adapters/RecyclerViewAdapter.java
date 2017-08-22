@@ -33,7 +33,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ArticleViewHolder articleHolder = (ArticleViewHolder)holder;
             ArticleData article = fragment.getArticles().get(position);
 
-            articleHolder.bindData(article);
+            articleHolder.bindData(article, position);
         }
     }
 
@@ -57,7 +57,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             reference = view.findViewById(R.id.articleItemReference);
         }
 
-        public void bindData(final ArticleData article) {
+        public void bindData(final ArticleData article, final int position) {
             title.setText(article.title);
             date.setText(article.datetime);
             if (!article.reference.isEmpty()) {
@@ -71,6 +71,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     Intent intent = new Intent("moe.yukisora.solidot.activities.ArticleActivity");
                     Bundle bundle = new Bundle();
                     bundle.putParcelable("articleData", article);
+                    bundle.putInt("position", position);
                     intent.putExtras(bundle);
                     fragment.startActivity(intent);
                 }
