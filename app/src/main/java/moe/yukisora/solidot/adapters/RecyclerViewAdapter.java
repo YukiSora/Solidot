@@ -74,6 +74,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     bundle.putInt("position", position);
                     intent.putExtras(bundle);
                     fragment.startActivity(intent);
+                    fragment.getActivity().overridePendingTransition(R.anim.push_right_in, R.anim.exit);
                 }
             });
         }

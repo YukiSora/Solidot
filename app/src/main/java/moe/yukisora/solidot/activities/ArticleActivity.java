@@ -76,6 +76,14 @@ public class ArticleActivity extends AppCompatActivity {
         return detector.onTouchEvent(e);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        finish();
+        overridePendingTransition(R.anim.exit, R.anim.push_down_out);
+    }
+
     private void onSwipeLeft() {
         ArticleData article = ArticleFragment.getNextArticle(++position);
         if (article != null) {
@@ -94,7 +102,7 @@ public class ArticleActivity extends AppCompatActivity {
 
     private void onSwipeRight() {
         finish();
-        overridePendingTransition(0, R.anim.push_down_out);
+        overridePendingTransition(R.anim.exit, R.anim.push_down_out);
     }
 
     private class GestureListener extends GestureDetector.SimpleOnGestureListener {
