@@ -14,8 +14,7 @@
 
         <activity
             android:name=".activities.MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:screenOrientation="portrait">
 
             <intent-filter>
 
@@ -29,8 +28,7 @@
 
         <activity
             android:name=".activities.ArticleActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:screenOrientation="portrait">
 
             <intent-filter>
 
