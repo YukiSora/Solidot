@@ -90,18 +90,11 @@ public class MainActivity extends AppCompatActivity {
                     fragmentManager.beginTransaction().replace(R.id.fragment, ArticleFragment.newInstance()).commit();
                     toolbar.setTitle(getString(R.string.app_name));
                     floatingActionButton.show();
-                }
-                else if (id == R.id.navigationPopular) {
-                    fragmentManager.beginTransaction().replace(R.id.fragment, ArticleFragment.newInstance()).commit();
-                    toolbar.setTitle(getString(R.string.popular));
-                    floatingActionButton.show();
-                }
-                else if (id == R.id.navigationSetting) {
+                } else if (id == R.id.navigationSetting) {
                     fragmentManager.beginTransaction().replace(R.id.fragment, SettingFragment.newInstance()).commit();
                     toolbar.setTitle(getString(R.string.setting));
                     floatingActionButton.hide();
-                }
-                else if (id == R.id.navigationAbout) {
+                } else if (id == R.id.navigationAbout) {
                     fragmentManager.beginTransaction().replace(R.id.fragment, AboutFragment.newInstance()).commit();
                     toolbar.setTitle(getString(R.string.about));
                     floatingActionButton.hide();

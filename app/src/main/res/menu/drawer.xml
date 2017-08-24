@@ -10,11 +10,6 @@
             android:title="@string/index" />
 
         <item
-            android:id="@+id/navigationPopular"
-            android:icon="@drawable/ic_like"
-            android:title="@string/popular" />
-
-        <item
             android:id="@+id/navigationSetting"
             android:icon="@drawable/ic_setting"
             android:title="@string/setting" />
