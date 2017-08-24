@@ -1,10 +1,16 @@
 <resources>
 
     <string name="app_name">Solidot</string>
-    <string name="index">Index</string>
-    <string name="popular">Popular</string>
-    <string name="setting">Setting</string>
-    <string name="about">About</string>
+    <string name="index">主页</string>
+    <string name="popular">热门</string>
+    <string name="setting">设置</string>
+    <string name="about">关于</string>
+
+    <string name="source">内容源</string>
+    <string name="author">作者</string>
+    <string name="github">Github</string>
+    <string name="version">版本</string>
+    <string name="license">开源许可</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

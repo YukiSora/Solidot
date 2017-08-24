@@ -3,18 +3,21 @@
 
         <Preference
             android:summary="http://solidot.org"
-            android:title="Source" />
+            android:title="@string/source" />
 
         <Preference
             android:summary="Yuki Sora"
-            android:title="Author" />
+            android:title="@string/author" />
 
         <Preference
             android:summary="https://github.com/YukiSora/Solidot"
-            android:title="GitHub" />
+            android:title="@string/github" />
 
         <Preference
             android:summary="1.0"
-            android:title="Version" />
+            android:title="@string/version" />
+
+        <Preference
+            android:title="@string/license" />
 
 </PreferenceScreen>
