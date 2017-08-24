@@ -8,9 +8,32 @@
 
     <string name="source">内容源</string>
     <string name="author">作者</string>
-    <string name="github">Github</string>
+    <string name="github">源代码</string>
     <string name="version">版本</string>
     <string name="license">开源许可</string>
+
+    <string name="licenses"><![CDATA[
+        <h3>jsoup</h3>
+        <p>Copyright © 2009 - 2017 Jonathan Hedley (jonathan@hedley.net)</p>
+        <p>https://github.com/jhy/jsoup</p>
+        <p>Licensed under the MIT License</p>
+        <h3>OkHttp</h3>
+        <p>Copyright 2016 Square, Inc.</p>
+        <p>https://github.com/square/okhttp</p>
+        <p>Licensed under the Apache License, Version 2.0</p>
+        <h3>RxAndroid</h3>
+        <p>Copyright 2015 The RxAndroid authors</p>
+        <p>https://github.com/ReactiveX/RxAndroid</p>
+        <p>Licensed under the Apache License, Version 2.0</p>
+        <h3>RxJava</h3>
+        <p>Copyright © 2016-present, RxJava Contributors</p>
+        <p>https://github.com/ReactiveX/RxJava</p>
+        <p>Licensed under the Apache License, Version 2.0</p>
+        <h3>TwinklingRefreshLayout</h3>
+        <p>Copyright 2016 lcodecorex</p>
+        <p>https://github.com/lcodecorex/TwinklingRefreshLayout</p>
+        <p>Licensed under the Apache License, Version 2.0</p>
+    ]]></string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

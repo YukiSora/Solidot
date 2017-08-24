@@ -18,6 +18,7 @@
             android:title="@string/version" />
 
         <Preference
+            android:key="license"
             android:title="@string/license" />
 
 </PreferenceScreen>
