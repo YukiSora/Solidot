@@ -10,11 +10,6 @@
             android:title="@string/index" />
 
         <item
-            android:id="@+id/navigationSetting"
-            android:icon="@drawable/ic_setting"
-            android:title="@string/setting" />
-
-        <item
             android:id="@+id/navigationAbout"
             android:icon="@drawable/ic_info"
             android:title="@string/about" />
