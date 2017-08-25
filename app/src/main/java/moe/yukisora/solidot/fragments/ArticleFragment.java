@@ -32,6 +32,7 @@ import moe.yukisora.solidot.core.GetArticles;
 import moe.yukisora.solidot.modles.ArticleData;
 
 public class ArticleFragment extends Fragment {
+    private static final String URL = "http://www.solidot.org/?issue=";
     private static ArticleFragment fragment;
     private ArrayList<ArticleData> articles;
     private Calendar calendar;
@@ -147,7 +148,7 @@ public class ArticleFragment extends Fragment {
         if (!isDownloading) {
             isDownloading = true;
 
-            GetArticles.getArticles("http://www.solidot.org/?issue=" + getDate(), new Observer<ArrayList<ArticleData>>() {
+            GetArticles.getArticles(URL + getDate(), new Observer<ArrayList<ArticleData>>() {
                 @Override
                 public void onSubscribe(@NonNull Disposable d) {
                 }
