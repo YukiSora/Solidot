@@ -5,4 +5,4 @@
 A simple Android app of http://www.solidot.org/
 
 ## Demo
-<img src="images/demo.gif" alt="demo" width="200px;"/>
+<img src="demo/demo.gif" alt="demo" width="200px;"/>
